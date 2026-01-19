@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epic Event Header</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .sidebar-transition {
+            transition: width 0.3s ease-in-out;
+        }
+        .rotate-180 {
+            transform: rotate(180deg);
+        }
+        .menu-item-hover:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        .dropdown-enter {
+            animation: slideDown 0.2s ease-out;
+        }
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Mobile Menu Button -->
+    <button id="mobileMenuBtn" class="lg:hidden fixed top-4 left-4 z-50 bg-orange-500 text-white p-3 rounded-lg shadow-lg">
+        <i class="fas fa-bars text-xl"></i>
+    </button>
+
+    <!-- Header -->
+    <header class="fixed top-0 right-0 left-0 lg:left-[280px] bg-white shadow-md z-20 transition-all duration-300" id="mainHeader">
+        <div class="flex items-center justify-between px-6 py-4">
+            <!-- Left side - Page Title or Breadcrumb -->
+            <div class="flex items-center gap-4">
+                <h2 class="text-2xl font-bold text-gray-800">Dashboard</h2>
+            </div>
+
+            <!-- Right side - Dark Mode Toggle & Admin Profile -->
+            <div class="flex items-center gap-6">
+                <!-- Dark Mode Toggle -->
+                <button id="darkModeToggle" class="text-gray-600 hover:text-orange-500 transition-colors">
+                    <i class="fas fa-moon text-2xl"></i>
+                </button>
+
+                <!-- Admin Profile Dropdown -->
+                <div class="relative">
+                    <button id="profileDropdownBtn" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                        <div class="text-right hidden sm:block">
+                            <p class="text-sm font-semibold text-gray-800">Admin User</p>
+                            <p class="text-xs text-gray-500">Administrator</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold">
+                            AU
+                        </div>
+                        <i class="fas fa-chevron-down text-gray-600 text-sm"></i>
+                    </button>
+
+                    <!-- Dropdown Menu -->
+                    <div id="profileDropdown" class="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 hidden dropdown-enter">
+                        <div class="p-4 border-b border-gray-200">
+                            <p class="text-sm font-semibold text-gray-800">Admin User</p>
+                            <p class="text-xs text-gray-500">admin@epicevent.com</p>
+                        </div>
+                        <div class="py-2">
+                            <a href="#" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 transition-colors">
+                                <i class="fas fa-user text-gray-600"></i>
+                                <span class="text-sm text-gray-700">My Profile</span>
+                            </a>
+                            <a href="#" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 transition-colors">
+                                <i class="fas fa-cog text-gray-600"></i>
+                                <span class="text-sm text-gray-700">Settings</span>
+                            </a>
+                        </div>
+                        <div class="border-t border-gray-200">
+                            <a href="#" class="flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition-colors text-red-600">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span class="text-sm font-medium">Logout</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden lg:hidden"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed top-0 left-0 h-screen bg-gradient-to-b from-orange-500 to-orange-600 sidebar-transition z-40 shadow-2xl -translate-x-full lg:translate-x-0" style="width: 280px;">
+        <div class="bg-black px-6 py-5 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 flex items-center justify-center">
+                    <svg viewBox="0 0 50 50" class="w-full h-full">
+                        <circle cx="25" cy="25" r="20" fill="none" stroke="#ff6b35" stroke-width="3"/>
+                        <circle cx="25" cy="25" r="14" fill="none" stroke="#ff6b35" stroke-width="3"/>
+                        <circle cx="25" cy="25" r="8" fill="none" stroke="#ff6b35" stroke-width="3"/>
+                        <circle cx="25" cy="25" r="3" fill="#ff6b35"/>
+                    </svg>
+                </div>
+                <span id="logoText" class="text-white text-2xl font-bold">Epic Event</span>
+            </div>
+            <button id="closeSidebarBtn" class="text-white hover:text-gray-300 hidden lg:block">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Navigation Menu -->
+        <nav class="mt-8 px-4">
+            <a href="#" class="flex items-center justify-between px-4 py-4 text-white menu-item-hover rounded-lg mb-2 group">
+                <div class="flex items-center gap-4">
+                    <i class="fas fa-home text-xl w-6"></i>
+                    <span id="menuText1" class="text-lg font-medium">Dashboard</span>
+                </div>
+            </a>
+
+            <a href="#" class="flex items-center justify-between px-4 py-4 text-white menu-item-hover rounded-lg mb-2 group">
+                <div class="flex items-center gap-4">
+                    <i class="fas fa-calendar-check text-xl w-6"></i>
+                    <span id="menuText5" class="text-lg font-medium">Event</span>
+                </div>
+            </a>
+
+            <a href="#" class="flex items-center justify-between px-4 py-4 text-white menu-item-hover rounded-lg mb-2 group">
+                <div class="flex items-center gap-4">
+                    <i class="fas fa-calendar text-xl w-6"></i>
+                    <span id="menuText6" class="text-lg font-medium">Event Calendar</span>
+                </div>
+            </a>
+
+            <a href="#" class="flex items-center justify-between px-4 py-4 text-white menu-item-hover rounded-lg mb-2 group">
+                <div class="flex items-center gap-4">
+                    <i class="fas fa-envelope text-xl w-6"></i>
+                    <span id="menuText7" class="text-lg font-medium">Contact Form</span>
+                </div>
+            </a>
+
+            <a href="#" class="flex items-center justify-between px-4 py-4 text-white menu-item-hover rounded-lg mb-2 group">
+                <div class="flex items-center gap-4">
+                    <i class="fas fa-user text-xl w-6"></i>
+                    <span id="menuText8" class="text-lg font-medium">Profile</span>
+                </div>
+            </a>
+
+            <a href="#" class="flex items-center justify-between px-4 py-4 text-white menu-item-hover rounded-lg mb-2 group">
+                <div class="flex items-center gap-4">
+                    <i class="fas fa-sign-out-alt text-xl w-6"></i>
+                    <span id="menuText9" class="text-lg font-medium">Logout</span>
+                </div>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main id="mainContent" class="lg:ml-[280px] transition-all duration-300 pt-24 p-8">
+        <div class="max-w-6xl mx-auto">
+            <h1 class="text-3xl font-bold text-gray-800 mb-6">Add New Event</h1>
+            
+            <form id="eventForm" class="space-y-6">
+                <!-- Event Information Section -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-6 pb-3 border-b border-gray-200">
+                        <i class="fas fa-info-circle text-orange-500 mr-2"></i>Event Information
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Event Name -->
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Event Name <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all" placeholder="Enter event name">
+                        </div>
+
+                        <!-- Event Start Date -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Event Start Date <span class="text-red-500">*</span>
+                            </label>
+                            <input type="date" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all">
+                        </div>
+
+                        <!-- Event End Date -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Event End Date <span class="text-red-500">*</span>
+                            </label>
+                            <input type="date" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all">
+                        </div>
+
+                        <!-- Event Start Time -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Event Start Time <span class="text-red-500">*</span>
+                            </label>
+                            <input type="time" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all">
+                        </div>
+
+                        <!-- Event End Time -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Event End Time <span class="text-red-500">*</span>
+                            </label>
+                            <input type="time" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all">
+                        </div>
+
+                        <!-- Event Venue -->
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Event Venue <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all" placeholder="Enter venue name">
+                        </div>
+
+                        <!-- Event Location (Google Maps) -->
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Event Location (Google Maps Embed URL)
+                            </label>
+                            <input type="url" id="mapUrl" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all mb-3" placeholder="Paste Google Maps embed URL here">
+                            <div class="border border-gray-300 rounded-lg overflow-hidden" style="height: 300px;">
+                                <iframe id="mapFrame" src="" class="w-full h-full" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                            </div>
+                        </div>
+
+                        <!-- Event Image -->
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Event Image <span class="text-red-500">*</span>
+                            </label>
+                            <div class="flex flex-col sm:flex-row gap-4">
+                                <div class="flex-1">
+                                    <input type="file" id="eventImage" accept="image/*" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all">
+                                </div>
+                                <div id="imagePreview" class="hidden flex-shrink-0">
+                                    <div class="relative w-full sm:w-48 h-48 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden">
+                                        <img id="previewImg" src="" alt="Preview" class="w-full h-full object-cover">
+                                        <button type="button" id="removeImage" class="absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600 transition-colors">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Event Status -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Event Status <span class="text-red-500">*</span>
+                            </label>
+                            <select required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all">
+                                <option value="">Select Status</option>
+                                <option value="upcoming">Upcoming</option>
+                                <option value="ongoing">Ongoing</option>
+                                <option value="completed">Completed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+
+                        <!-- Event Cost -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Event Cost <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                                <input type="number" required min="0" step="0.01" class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all" placeholder="0.00">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Menu List Section -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between mb-6 pb-3 border-b border-gray-200">
+                        <h2 class="text-2xl font-semibold text-gray-800">
+                            <i class="fas fa-utensils text-orange-500 mr-2"></i>Event Menu List
+                        </h2>
+                        <button type="button" id="addMenuBtn" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                            <i class="fas fa-plus"></i>
+                            Add Menu Item
+                        </button>
+                    </div>
+
+                    <div id="menuItemsContainer" class="space-y-4">
+                        <!-- Static Menu Item 1 -->
+                        <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+                            <div class="flex-1 w-full">
+                                <input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all" placeholder="Menu item name">
+                            </div>
+                            <span class="text-gray-400 text-sm sm:text-base">Static Item</span>
+                        </div>
+
+                        <!-- Static Menu Item 2 -->
+                        <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+                            <div class="flex-1 w-full">
+                                <input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all" placeholder="Menu item name">
+                            </div>
+                            <span class="text-gray-400 text-sm sm:text-base">Static Item</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-end">
+                    <button type="button" id="cancelBtn" class="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">
+                        <i class="fas fa-times mr-2"></i>Cancel
+                    </button>
+                    <button type="submit" class="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors font-medium shadow-lg">
+                        <i class="fas fa-check mr-2"></i>Submit Event
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+        const mainHeader = document.getElementById('mainHeader');
+        const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const overlay = document.getElementById('overlay');
+        const logoText = document.getElementById('logoText');
+        const profileDropdownBtn = document.getElementById('profileDropdownBtn');
+        const profileDropdown = document.getElementById('profileDropdown');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        let isCollapsed = false;
+
+        // Profile Dropdown Toggle
+        profileDropdownBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('hidden');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!profileDropdownBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
+                profileDropdown.classList.add('hidden');
+            }
+        });
+
+        // Dark Mode Toggle (placeholder functionality)
+        darkModeToggle.addEventListener('click', () => {
+            const icon = darkModeToggle.querySelector('i');
+            if (icon.classList.contains('fa-moon')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                // Add dark mode classes here
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                // Remove dark mode classes here
+            }
+        });
+
+        // Toggle sidebar on desktop/tablet
+        closeSidebarBtn.addEventListener('click', () => {
+            isCollapsed = !isCollapsed;
+            
+            if (isCollapsed) {
+                sidebar.style.width = '80px';
+                mainContent.classList.remove('lg:ml-[280px]');
+                mainContent.classList.add('lg:ml-[80px]');
+                mainHeader.classList.remove('lg:left-[280px]');
+                mainHeader.classList.add('lg:left-[80px]');
+                logoText.classList.add('hidden');
+                
+                // Hide all text
+                for (let i = 1; i <= 9; i++) {
+                    const text = document.getElementById(`menuText${i}`);
+                    if (text) text.classList.add('hidden');
+                }
+            } else {
+                sidebar.style.width = '280px';
+                mainContent.classList.remove('lg:ml-[80px]');
+                mainContent.classList.add('lg:ml-[280px]');
+                mainHeader.classList.remove('lg:left-[80px]');
+                mainHeader.classList.add('lg:left-[280px]');
+                logoText.classList.remove('hidden');
+                
+                // Show all text
+                for (let i = 1; i <= 9; i++) {
+                    const text = document.getElementById(`menuText${i}`);
+                    if (text) text.classList.remove('hidden');
+                }
+            }
+        });
+
+        // Mobile menu toggle
+        mobileMenuBtn.addEventListener('click', () => {
+            sidebar.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+        });
+
+        // Close mobile menu
+        overlay.addEventListener('click', () => {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        });
+
+        // Close mobile menu when clicking a link
+        const menuLinks = sidebar.querySelectorAll('a');
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 1024) {
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                }
+            });
+        });
+
+        // Event Image Preview
+        const eventImageInput = document.getElementById('eventImage');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewImg = document.getElementById('previewImg');
+        const removeImageBtn = document.getElementById('removeImage');
+
+        eventImageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    imagePreview.classList.remove('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        removeImageBtn.addEventListener('click', function() {
+            eventImageInput.value = '';
+            previewImg.src = '';
+            imagePreview.classList.add('hidden');
+        });
+
+        // Google Maps URL Handler
+        const mapUrlInput = document.getElementById('mapUrl');
+        const mapFrame = document.getElementById('mapFrame');
+
+        mapUrlInput.addEventListener('input', function(e) {
+            mapFrame.src = e.target.value;
+        });
+
+        // Dynamic Menu Items
+        const addMenuBtn = document.getElementById('addMenuBtn');
+        const menuItemsContainer = document.getElementById('menuItemsContainer');
+        let menuItemCount = 0;
+
+        addMenuBtn.addEventListener('click', function() {
+            menuItemCount++;
+            const menuItem = document.createElement('div');
+            menuItem.className = 'flex flex-col sm:flex-row gap-3 items-start sm:items-center menu-item-dynamic';
+            menuItem.innerHTML = `
+                <div class="flex-1 w-full">
+                    <input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all" placeholder="Menu item name">
+                </div>
+                <button type="button" class="remove-menu-btn bg-red-500 hover:bg-red-600 text-white px-4 py-3 rounded-lg transition-colors">
+                    <i class="fas fa-trash"></i>
+                </button>
+            `;
+            menuItemsContainer.appendChild(menuItem);
+
+            // Add remove functionality
+            const removeBtn = menuItem.querySelector('.remove-menu-btn');
+            removeBtn.addEventListener('click', function() {
+                menuItem.remove();
+            });
+        });
+
+        // Form Submission
+        const eventForm = document.getElementById('eventForm');
+        const cancelBtn = document.getElementById('cancelBtn');
+
+        eventForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Event submitted successfully!');
+            // Add your form submission logic here
+        });
+
+        cancelBtn.addEventListener('click', function() {
+            if (confirm('Are you sure you want to cancel? All unsaved changes will be lost.')) {
+                eventForm.reset();
+                imagePreview.classList.add('hidden');
+                mapFrame.src = '';
+                // Remove all dynamic menu items
+                const dynamicItems = document.querySelectorAll('.menu-item-dynamic');
+                dynamicItems.forEach(item => item.remove());
+            }
+        });
+    </script>
+</body>
+</html>
